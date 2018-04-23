@@ -57,6 +57,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -80,6 +81,8 @@ public class Camera2BasicFragment extends Fragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
+
+    private TextView tickView;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -428,6 +431,7 @@ public class Camera2BasicFragment extends Fragment
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.picture).setOnClickListener(this);
         view.findViewById(R.id.info).setOnClickListener(this);
+        tickView = view.findViewById(R.id.tickView);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
 
@@ -1033,4 +1037,8 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
+    public void updateText(String text){
+        if(tickView != null)
+            tickView.setText(text);
+    }
 }

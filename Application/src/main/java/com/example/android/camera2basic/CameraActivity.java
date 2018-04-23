@@ -20,17 +20,19 @@ import android.os.Bundle;
 import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.TextView;
 
 public class CameraActivity extends AppCompatActivity {
+
+    Camera2BasicFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         if (null == savedInstanceState) {
+            fragment = Camera2BasicFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2BasicFragment.newInstance())
+                    .replace(R.id.container, fragment)
                     .commit();
         }
 
@@ -81,6 +83,8 @@ public class CameraActivity extends AppCompatActivity {
                         CameraActivity.this.second;
                 //CameraActivity.this.tickView.setText(ticks);
                 Log.i("__jni",ticks);
+                fragment.updateText(ticks);
+
             }
         });
     }
