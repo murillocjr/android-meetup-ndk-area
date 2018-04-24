@@ -21,6 +21,10 @@ import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+
 public class CameraActivity extends AppCompatActivity {
 
     Camera2BasicFragment fragment;
@@ -36,9 +40,30 @@ public class CameraActivity extends AppCompatActivity {
                     .commit();
         }
 
-        //////////////////From JNI Sample
-        //tickView = (TextView) findViewById(R.id.tickView);
+        if (!OpenCVLoader.initDebug()) {
+            Log.d("FILE", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+        } else {
+            Log.d("FILE", "OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
     }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS: {
+                    //System.loadLibrary("hello-jnicallback");
+                }
+                break;
+                default: {
+                    super.onManagerConnected(status);
+                }
+                break;
+            }
+        }
+    };
 
     //////////////////From JNI Sample
     int hour = 0;
@@ -83,7 +108,8 @@ public class CameraActivity extends AppCompatActivity {
                         CameraActivity.this.second;
                 //CameraActivity.this.tickView.setText(ticks);
                 Log.i("__jni",ticks);
-                fragment.updateText(ticks);
+                if (fragment!=null)
+                    fragment.updateText(ticks);
 
             }
         });

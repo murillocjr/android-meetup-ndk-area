@@ -72,7 +72,10 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.android.Utils;
+
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -248,8 +251,9 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            Log.i("__image",String.valueOf(reader.getHeight()));
-            //mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+
         }
 
     };
@@ -932,6 +936,7 @@ public class Camera2BasicFragment extends Fragment
          */
         private final File mFile;
 
+
         ImageSaver(Image image, File file) {
             mImage = image;
             mFile = file;
@@ -939,6 +944,27 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void run() {
+
+            //Mat matImage = ImageUtils.imageToMat(mImage, true);
+            //Log.i("__image",String.valueOf(matImage.cols()));
+
+            ByteBuffer bb = mImage.getPlanes()[0].getBuffer();
+            byte[] buf = new byte[bb.remaining()];
+
+            Mat matImage = new Mat(mImage.getHeight(), mImage.getWidth(), CvType.CV_8UC4);
+            matImage.put(0,0,buf);
+
+            Log.i("__image",String.valueOf(matImage.cols()));
+
+            mImage.close();
+            //
+            //Utils.
+
+            //
+            //Log.i("__image",String.valueOf(matImage.cols()));
+            //mImage.close();
+            //
+            /*
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
@@ -958,6 +984,7 @@ public class Camera2BasicFragment extends Fragment
                     }
                 }
             }
+            */
         }
 
     }
