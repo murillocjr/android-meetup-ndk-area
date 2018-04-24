@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -524,7 +525,7 @@ public class Camera2BasicFragment extends Fragment
                         Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                         new CompareSizesByArea());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
-                        ImageFormat.JPEG, /*maxImages*/2);
+                        ImageFormat.YUV_420_888, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
 
@@ -944,15 +945,18 @@ public class Camera2BasicFragment extends Fragment
 
         @Override
         public void run() {
-
-            //Mat matImage = ImageUtils.imageToMat(mImage, true);
+            Mat matImage = ImageUtils.imageToMat(mImage);
             //Log.i("__image",String.valueOf(matImage.cols()));
 
-            ByteBuffer bb = mImage.getPlanes()[0].getBuffer();
-            byte[] buf = new byte[bb.remaining()];
+            //ByteBuffer bb = mImage.getPlanes()[0].getBuffer();
 
-            Mat matImage = new Mat(mImage.getHeight(), mImage.getWidth(), CvType.CV_8UC4);
-            matImage.put(0,0,buf);
+            //Mat mat = ImageUtil.imageToBgr(mImage);
+            //rgbFrameBitmap = BitmapFactory.decodeStream(new ByteBufferBackedInputStream(bb));
+
+            //byte[] buf = new byte[bb.remaining()];
+
+            //Mat matImage = new Mat(mImage.getHeight(), mImage.getWidth(), CvType.CV_8UC4);
+            //matImage.put(0,0,buf);
 
             Log.i("__image",String.valueOf(matImage.cols()));
 

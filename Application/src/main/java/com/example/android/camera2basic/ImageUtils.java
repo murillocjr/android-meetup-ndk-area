@@ -21,7 +21,8 @@ public class ImageUtils {
      * @param image Image in the YUV_420_888 format.
      * @return OpenCV Mat.
      */
-    public static Mat imageToMat(Image image, boolean flip) {
+    public static Mat imageToMat(Image image) {
+        /* 将image YUV_420_888格式转化为Mat */
 
         ByteBuffer buffer;
         int rowStride;
@@ -30,9 +31,11 @@ public class ImageUtils {
         int height = image.getHeight();
         int offset = 0;
 
+        // image格式图片保存在3个planes里，分别为Y, UV, VU
         Image.Plane[] planes = image.getPlanes();
         byte[] data = new byte[image.getWidth() * image.getHeight() * ImageFormat.getBitsPerPixel(ImageFormat.YUV_420_888) / 8];
         byte[] rowData = new byte[planes[0].getRowStride()];
+
 
         for (int i = 0; i < planes.length; i++) {
             buffer = planes[i].getBuffer();
@@ -46,18 +49,11 @@ public class ImageUtils {
                     int length = w * bytesPerPixel;
                     buffer.get(data, offset, length);
 
-                    // Advance buffer the remainder of the row stride, unless on the last row.
-                    // Otherwise, this will throw an IllegalArgumentException because the buffer
-                    // doesn't include the last padding.
                     if (h - row != 1) {
                         buffer.position(buffer.position() + rowStride - length);
                     }
                     offset += length;
                 } else {
-
-                    // On the last row only read the width of the image minus the pixel stride
-                    // plus one. Otherwise, this will throw a BufferUnderflowException because the
-                    // buffer doesn't include the last padding.
                     if (h - row == 1) {
                         buffer.get(rowData, 0, width - pixelStride + 1);
                     } else {
@@ -71,14 +67,10 @@ public class ImageUtils {
             }
         }
 
-        // Finally, create the Mat.
-        Mat mat = new Mat(height, width, CvType.CV_8UC4);
+        Mat mat = new Mat(height + height / 2, width, CvType.CV_8UC1);
+        //Log.d("TESTMAT", mat.rows() + " " + mat.cols());
         mat.put(0, 0, data);
 
-        if (flip){
-            Core.transpose(mat, mat);
-            Core.flip(mat, mat, 1);
-        }
         return mat;
     }
 }
