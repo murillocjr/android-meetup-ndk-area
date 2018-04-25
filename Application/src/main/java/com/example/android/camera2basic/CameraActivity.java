@@ -17,7 +17,6 @@
 package com.example.android.camera2basic;
 
 import android.os.Bundle;
-import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -55,6 +54,7 @@ public class CameraActivity extends AppCompatActivity {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
                     //System.loadLibrary("hello-jnicallback");
+                    System.loadLibrary("hello-jni");
                 }
                 break;
                 default: {
@@ -66,59 +66,16 @@ public class CameraActivity extends AppCompatActivity {
     };
 
     //////////////////From JNI Sample
-    int hour = 0;
-    int minute = 0;
-    int second = 0;
-    //TextView tickView;
 
     @Override
     public void onResume() {
         super.onResume();
-        hour = minute = second = 0;
-        //((TextView)findViewById(R.id.hellojniMsg)).setText(stringFromJNI());
         Log.i("__jni",stringFromJNI());
-        startTicks();
+        if (fragment!=null)
+            fragment.updateText(stringFromJNI());
     }
 
-    @Override
-    public void onPause () {
-        super.onPause();
-        StopTicks();
-    }
-
-    /*
-     * A function calling from JNI to update current timer
-     */
-    @Keep
-    private void updateTimer() {
-        ++second;
-        if(second >= 60) {
-            ++minute;
-            second -= 60;
-            if(minute >= 60) {
-                ++hour;
-                minute -= 60;
-            }
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String ticks = "" + CameraActivity.this.hour + ":" +
-                        CameraActivity.this.minute + ":" +
-                        CameraActivity.this.second;
-                //CameraActivity.this.tickView.setText(ticks);
-                Log.i("__jni",ticks);
-                if (fragment!=null)
-                    fragment.updateText(ticks);
-
-            }
-        });
-    }
-    static {
-        System.loadLibrary("hello-jnicallback");
-    }
     public native  String stringFromJNI();
-    public native void startTicks();
-    public native void StopTicks();
+
 }
 
