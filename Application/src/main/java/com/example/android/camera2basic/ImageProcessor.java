@@ -19,14 +19,14 @@ public class ImageProcessor implements Runnable {
         mFragment = fragment;
     }
 
-    public native  String stringFromJNI();
+    public native  String stringFromJNI(long matImage);
 
     @Override
     public void run() {
         Mat matImage = ImageUtils.imageToMat(mImage);
 
         //Log.i("__image",stringFromJNI());
-        mFragment.updateText(stringFromJNI());
+        mFragment.updateText(stringFromJNI(matImage.getNativeObjAddr()));
 
         mImage.close();
 
