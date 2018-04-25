@@ -23,6 +23,7 @@ import android.util.Log;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -53,7 +54,6 @@ public class CameraActivity extends AppCompatActivity {
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS: {
-                    //System.loadLibrary("hello-jnicallback");
                     System.loadLibrary("hello-jni");
                 }
                 break;
@@ -64,18 +64,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
     };
-
-    //////////////////From JNI Sample
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i("__jni",stringFromJNI());
-        if (fragment!=null)
-            fragment.updateText(stringFromJNI());
-    }
-
-    public native  String stringFromJNI();
 
 }
 

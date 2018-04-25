@@ -24,7 +24,7 @@
  *   HelloJni.java
  */
 JNIEXPORT jstring JNICALL
-Java_com_example_android_camera2basic_CameraActivity_stringFromJNI( JNIEnv* env,
+Java_com_example_android_camera2basic_ImageProcessor_stringFromJNI( JNIEnv* env,
                                                   jobject thiz )
 {
 #if defined(__arm__)

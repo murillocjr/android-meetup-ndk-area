@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -62,9 +61,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,9 +69,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.android.Utils;
 
 
 public class Camera2BasicFragment extends Fragment
@@ -88,7 +82,7 @@ public class Camera2BasicFragment extends Fragment
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
 
-    private TextView tickView;
+    private TextView outputView;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -253,7 +247,7 @@ public class Camera2BasicFragment extends Fragment
         @Override
         public void onImageAvailable(ImageReader reader) {
 
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+            mBackgroundHandler.post(new ImageProcessor(reader.acquireNextImage(), Camera2BasicFragment.this));
 
         }
 
@@ -439,7 +433,7 @@ public class Camera2BasicFragment extends Fragment
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.picture).setOnClickListener(this);
         view.findViewById(R.id.info).setOnClickListener(this);
-        tickView = view.findViewById(R.id.tickView);
+        outputView = view.findViewById(R.id.tickView);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
 
@@ -923,75 +917,7 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
-    /**
-     * Saves a JPEG {@link Image} into the specified {@link File}.
-     */
-    private static class ImageSaver implements Runnable {
 
-        /**
-         * The JPEG image
-         */
-        private final Image mImage;
-        /**
-         * The file we save the image into.
-         */
-        private final File mFile;
-
-
-        ImageSaver(Image image, File file) {
-            mImage = image;
-            mFile = file;
-        }
-
-        @Override
-        public void run() {
-            Mat matImage = ImageUtils.imageToMat(mImage);
-            //Log.i("__image",String.valueOf(matImage.cols()));
-
-            //ByteBuffer bb = mImage.getPlanes()[0].getBuffer();
-
-            //Mat mat = ImageUtil.imageToBgr(mImage);
-            //rgbFrameBitmap = BitmapFactory.decodeStream(new ByteBufferBackedInputStream(bb));
-
-            //byte[] buf = new byte[bb.remaining()];
-
-            //Mat matImage = new Mat(mImage.getHeight(), mImage.getWidth(), CvType.CV_8UC4);
-            //matImage.put(0,0,buf);
-
-            Log.i("__image",String.valueOf(matImage.cols()));
-
-            mImage.close();
-            //
-            //Utils.
-
-            //
-            //Log.i("__image",String.valueOf(matImage.cols()));
-            //mImage.close();
-            //
-            /*
-            ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-            byte[] bytes = new byte[buffer.remaining()];
-            buffer.get(bytes);
-            FileOutputStream output = null;
-            try {
-                output = new FileOutputStream(mFile);
-                output.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                mImage.close();
-                if (null != output) {
-                    try {
-                        output.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            */
-        }
-
-    }
 
     /**
      * Compares two {@code Size}s based on their areas.
@@ -1071,8 +997,15 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
-    public void updateText(String text){
-        if(tickView != null)
-            tickView.setText(text);
+    public void updateText(final String text){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(outputView != null)
+                    outputView.setText(text);
+
+            }
+        });
+
     }
 }
