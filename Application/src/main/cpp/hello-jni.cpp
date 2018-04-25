@@ -22,7 +22,7 @@ AreaCalculator areaCalculator;
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_example_android_camera2basic_ImageProcessor_stringFromJNI(
+Java_com_example_android_camera2basic_ImageProcessor_processMatJNI(
         JNIEnv* env, jobject thiz, jlong inputImage
 )
 {
