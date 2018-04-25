@@ -25,7 +25,6 @@ public class ImageProcessor implements Runnable {
     public void run() {
         Mat matImage = ImageUtils.imageToMat(mImage);
 
-        //Log.i("__image",processMatJNI());
         mFragment.updateText(processMatJNI(matImage.getNativeObjAddr()));
 
         mImage.close();
