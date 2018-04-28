@@ -53,34 +53,25 @@ int blueCount(Mat hsv)
 String AreaCalculator::processMat(Mat frame)
 {
 
-    Vec3b color = frame.at<Vec3b>(Point(200,300));
+    Mat3b hsv;
+    cvtColor(frame, hsv, COLOR_BGR2HSV);
 
-    //int factor = 5;
-    //resize(frame,frame,cvSize((frame.cols)/factor,(frame.rows)/factor));
-
-
-    // imshow("s",frame);
-    //waitKey(0);
-
-
-//    Mat3b hsv;
-//    cvtColor(frame, hsv, COLOR_YUV2BGR);
-//    cvtColor(hsv,hsv,COLOR_BGR2HSV);
-//
-//    int red = redCount(frame.clone());
-//    int blue = blueCount(frame.clone());
-    //cout<<red<<","<<blue<<endl;
+    Vec3b color = hsv.at<Vec3b>(Point(200,300));
+    
+    int red = redCount(hsv.clone());
+    int blue = blueCount(frame.clone());
 
 
     ostringstream os;
-    //os << red<<",,"<<blue<<",,"<<frame.cols;
     os<<color;
     os<<",";
-    os<<color[1];
+    os<<red;
     os<<",";
-    os<<color[2];
+    os<<blue;
     os<<",";
     os<<frame.cols;
+    os<<",";
+    os<<frame.rows;
 
     return os.str();;
 }
