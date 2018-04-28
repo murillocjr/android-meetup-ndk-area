@@ -1,6 +1,12 @@
 package com.example.android.camera2basic;
 
+import android.graphics.Bitmap;
 import android.media.Image;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
+
+import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 /**
@@ -21,11 +27,20 @@ public class ImageProcessor implements Runnable {
 
     public native  String processMatJNI(long matImage);
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void run() {
-        Mat matImage = ImageUtils.imageToMat(mImage);
+        Mat matImage = ImageUtils.convertYuv420888ToMat(mImage,false);
 
-        mFragment.updateText(processMatJNI(matImage.getNativeObjAddr()));
+//        Bitmap tmp =  Bitmap.createBitmap(matImage.cols(),matImage.rows(),null, false);
+//        Utils.matToBitmap(matImage, tmp);
+//
+//        Log.i("__bm", tmp.toString());
+
+        String r = processMatJNI(matImage.getNativeObjAddr());
+
+        Log.i("__bm", r);
+        mFragment.updateText(r);
 
         mImage.close();
 

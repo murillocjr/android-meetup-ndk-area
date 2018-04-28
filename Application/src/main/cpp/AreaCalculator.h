@@ -1,10 +1,18 @@
-//
-// Created by netmaster on 4/24/18.
-//
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-#ifndef CAMERA2BASIC_AREACALCULATOR_H
-#define CAMERA2BASIC_AREACALCULATOR_H
+/*
+ * File:   AreaCalculator.h
+ * Author: netmaster
+ *
+ * Created on April 22, 2018, 5:18 PM
+ */
 
+#ifndef AREACALCULATOR_H
+#define AREACALCULATOR_H
 
 #include <iostream>
 #include <fstream>
@@ -21,5 +29,5 @@ public:
 
 };
 
+#endif /* AREACALCULATOR_H */
 
-#endif //CAMERA2BASIC_AREACALCULATOR_H
