@@ -19,7 +19,6 @@ public class ImageProcessor implements Runnable {
     private final Camera2BasicFragment mFragment;
 
 
-
     ImageProcessor(Image image, Camera2BasicFragment fragment) {
         mImage = image;
         mFragment = fragment;
@@ -32,17 +31,15 @@ public class ImageProcessor implements Runnable {
     public void run() {
         Mat matImage = ImageUtils.convertYuv420888ToMat(mImage,false);
 
-//        Bitmap tmp =  Bitmap.createBitmap(matImage.cols(),matImage.rows(),null, false);
-//        Utils.matToBitmap(matImage, tmp);
-//
-//        Log.i("__bm", tmp.toString());
 
         String r = processMatJNI(matImage.getNativeObjAddr());
 
-        Log.i("__bm", r);
         mFragment.updateText(r);
+        String[] values = r.split(",");
 
         mImage.close();
+
+        mFragment.showToast(values[0] + " piezas rojas");
 
     }
 

@@ -239,7 +239,7 @@ public class Camera2BasicFragment extends Fragment
         @Override
         public void onImageAvailable(ImageReader reader) {
 
-            mBackgroundHandler.post(new ImageProcessor(reader.acquireNextImage(), Camera2BasicFragment.this));
+            mBackgroundHandler.post( new ImageProcessor(reader.acquireNextImage(), Camera2BasicFragment.this));
 
         }
 
@@ -350,7 +350,7 @@ public class Camera2BasicFragment extends Fragment
      *
      * @param text The message to show
      */
-    private void showToast(final String text) {
+    public void showToast(final String text) {
         final Activity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
@@ -832,7 +832,6 @@ public class Camera2BasicFragment extends Fragment
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Processed");
                     unlockFocus();
                 }
             };
